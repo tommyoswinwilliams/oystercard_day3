@@ -7,13 +7,20 @@ describe Oystercard do
     end
   end
   describe "#top_up" do
-    it "allows topping up balance by amount given" do
+    it "allows topping up balance by integer amount given" do
       subject.top_up(5)
       expect(subject.balance).to eq 5
     end
+    it "allows topping up balance by float amount given" do
+      subject.top_up(5.5)
+      expect(subject.balance).to eq 5.5
+    end
     it "prevents topping up if amount not given" do
       message = "Please provide a valid amount"
-      expect { subject.top_up("five") }.to raise_error message
+      bad_amounts = ["five", 0, -2.5]
+      bad_amounts.each do |amount|
+        expect { subject.top_up(amount) }.to raise_error message
+      end
     end
   end
 end
