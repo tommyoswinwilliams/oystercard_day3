@@ -42,6 +42,13 @@ describe Oystercard do
       expect { subject.deduct(3.50) }.to raise_error message
     end
   end
+
+  describe "#touch_in" do
+    it "updates internal boolean in_journey? to true" do
+      subject.touch_in
+      expect(subject.in_journey?).to be true 
+    end
+  end
 end
 
 # NameError without Oystercard class
