@@ -35,6 +35,12 @@ describe Oystercard do
       subject.deduct(3.50)
       expect(subject.balance).to eq 6.50
     end
+
+    it "doesn't allow the journey if balance lower than fare" do
+      subject.top_up(3)
+      message = "Sorry, your balance is not enough to cover the fare"
+      expect { subject.deduct(3.50) }.to raise_error message
+    end
   end
 end
 

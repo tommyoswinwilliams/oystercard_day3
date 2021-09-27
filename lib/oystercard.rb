@@ -7,6 +7,7 @@ class Oystercard
     @error_messages = {
       valid_amount: "Please provide a valid amount",
       exceed_limit: "Sorry, you cannot exceed the balance limit of £#{BALANCE_LIMIT}",
+      insufficient_balance: "Sorry, your balance is not enough to cover the fare" 
     }
   end
 
@@ -17,6 +18,7 @@ class Oystercard
   end
 
   def deduct(fare)
+    fail @error_messages[:insufficient_balance] if fare_exceeds?(fare)
     @balance -= fare
   end
 
@@ -28,5 +30,9 @@ class Oystercard
 
   def exceed_limit?(amount)
     @balance + amount > BALANCE_LIMIT
+  end
+
+  def fare_exceeds?(fare)
+    @balance < fare
   end
 end
