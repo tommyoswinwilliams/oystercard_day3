@@ -45,6 +45,7 @@ describe Oystercard do
 
   describe "#touch_in" do
     it "updates internal boolean in_journey? to true" do
+      subject.top_up(described_class::MIN_BALANCE)
       subject.touch_in
       expect(subject).to be_in_journey
     end
@@ -52,14 +53,21 @@ describe Oystercard do
     it "raises error when already in_journey?" do
       message = "You are already in a journey"
 
+      subject.top_up(described_class::MIN_BALANCE)
       subject.touch_in
 
+      expect { subject.touch_in }.to raise_error message
+    end
+
+    it "raises error when card with insufficient balance is touched in" do
+      message = "Sorry, you don't have the minimum balance required of £#{described_class::MIN_BALANCE}"
       expect { subject.touch_in }.to raise_error message
     end
   end
 
   describe "#touch_out" do
     it "updates internal boolean in_journey? to false" do
+      subject.top_up(described_class::MIN_BALANCE)
       subject.touch_in
       subject.touch_out
       expect(subject).not_to be_in_journey
