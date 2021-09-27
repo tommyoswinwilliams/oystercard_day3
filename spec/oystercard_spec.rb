@@ -48,5 +48,28 @@ describe Oystercard do
       subject.touch_in
       expect(subject.in_journey?).to be true 
     end
+
+    it "raises error when already in_journey?" do
+      message = "You are already in a journey"
+
+      subject.touch_in
+
+      expect { subject.touch_in }.to raise_error message
+    end
   end
+
+  describe "#touch_out" do
+    it "updates internal boolean in_journey? to false" do
+      subject.touch_in
+      subject.touch_out
+      expect(subject.in_journey?).to be false 
+    end
+
+    it "raises error when not in_journey?" do
+      message = "You are not in a journey"
+
+      expect { subject.touch_out }.to raise_error message
+    end
+  end
+
 end

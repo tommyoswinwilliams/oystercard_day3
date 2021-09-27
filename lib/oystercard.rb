@@ -7,7 +7,9 @@ class Oystercard
     @error_messages = {
       valid_amount: "Please provide a valid amount",
       exceed_limit: "Sorry, you cannot exceed the balance limit of £#{BALANCE_LIMIT}",
-      insufficient_balance: "Sorry, your balance is not enough to cover the fare" 
+      insufficient_balance: "Sorry, your balance is not enough to cover the fare",
+      in_journey: "You are already in a journey", 
+      not_in_journey: "You are not in a journey" 
     }
     @in_journey = false
   end
@@ -24,10 +26,12 @@ class Oystercard
   end
   
   def touch_in
+    fail @error_messages[:in_journey] if in_journey?
     @in_journey = true
   end
 
   def touch_out
+    fail @error_messages[:not_in_journey] unless in_journey?
     @in_journey = false
   end
 
