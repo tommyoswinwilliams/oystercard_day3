@@ -28,6 +28,14 @@ describe Oystercard do
       end
     end
   end
+
+  describe "#deduct" do
+    it "reduces balance by amount of fare" do
+      subject.top_up(10)
+      subject.deduct(3.50)
+      expect(subject.balance).to eq 6.50
+    end
+  end
 end
 
 # NameError without Oystercard class
