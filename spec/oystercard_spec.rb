@@ -29,19 +29,11 @@ describe Oystercard do
     end
   end
 
-  describe "#deduct" do
-    it "reduces balance by amount of fare" do
-      subject.top_up(10)
-      subject.deduct(3.50)
-      expect(subject.balance).to eq 6.50
-    end
-
-    it "doesn't allow the journey if balance lower than fare" do
-      subject.top_up(3)
-      message = "Sorry, your balance is not enough to cover the fare"
-      expect { subject.deduct(3.50) }.to raise_error message
-    end
-  end
+  # it "doesn't allow the journey if balance lower than fare" do
+  #   subject.top_up(3)
+  #   message = "Sorry, your balance is not enough to cover the fare"
+  #   expect { subject.deduct(3.50) }.to raise_error message
+  # end
 
   describe "#touch_in" do
     it "updates internal boolean in_journey? to true" do
@@ -77,6 +69,12 @@ describe Oystercard do
       message = "You are not in a journey"
 
       expect { subject.touch_out }.to raise_error message
+    end
+    it "deducts fare from balance" do
+      fare = described_class::MIN_BALANCE
+      subject.top_up(fare)
+      subject.touch_in
+      expect { subject.touch_out }.to change { subject.balance }.by(-fare)
     end
   end
 end
