@@ -1,9 +1,19 @@
-require 'oystercard'
+require "oystercard"
 
 describe Oystercard do
   describe "#balance" do
     it "creates a new card with a balance of 0" do
       expect(subject.balance).to eq 0
+    end
+  end
+  describe "#top_up" do
+    it "allows topping up balance by amount given" do
+      subject.top_up(5)
+      expect(subject.balance).to eq 5
+    end
+    it "prevents topping up if amount not given" do
+      message = "Please provide a valid amount"
+      expect { subject.top_up("five") }.to raise_error message
     end
   end
 end
