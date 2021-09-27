@@ -1,7 +1,11 @@
 require 'oystercard'
 
 describe Oystercard do
-  
+  describe "#balance" do
+    it "creates a new card with a balance of 0" do
+      expect(subject.balance).to eq 0
+    end
+  end
 end
 
 # NameError without Oystercard class
