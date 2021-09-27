@@ -22,11 +22,6 @@ class Oystercard
     @balance += amount
   end
 
-  def deduct(fare)
-    fail @error_messages[:insufficient_fare_balance] if fare_exceeds?(fare)
-    @balance -= fare
-  end
-
   def touch_in
     fail @error_messages[:in_journey] if in_journey?
     fail @error_messages[:insufficient_min_balance] if fare_exceeds?(MIN_BALANCE)
@@ -35,6 +30,7 @@ class Oystercard
 
   def touch_out
     fail @error_messages[:not_in_journey] unless in_journey?
+    deduct(MIN_BALANCE)
     @in_journey = false
   end
 
@@ -43,6 +39,11 @@ class Oystercard
   end
 
   private
+
+  def deduct(fare)
+    fail @error_messages[:insufficient_fare_balance] if fare_exceeds?(fare)
+    @balance -= fare
+  end
 
   def valid_amount?(amount)
     (amount.is_a?(Integer) || amount.is_a?(Float)) && (amount.positive?)
