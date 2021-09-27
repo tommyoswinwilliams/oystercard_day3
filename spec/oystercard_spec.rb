@@ -46,7 +46,7 @@ describe Oystercard do
   describe "#touch_in" do
     it "updates internal boolean in_journey? to true" do
       subject.touch_in
-      expect(subject.in_journey?).to be true 
+      expect(subject).to be_in_journey
     end
 
     it "raises error when already in_journey?" do
@@ -62,7 +62,7 @@ describe Oystercard do
     it "updates internal boolean in_journey? to false" do
       subject.touch_in
       subject.touch_out
-      expect(subject.in_journey?).to be false 
+      expect(subject).not_to be_in_journey
     end
 
     it "raises error when not in_journey?" do
@@ -71,5 +71,4 @@ describe Oystercard do
       expect { subject.touch_out }.to raise_error message
     end
   end
-
 end
