@@ -32,6 +32,7 @@ class Oystercard
   def touch_out(exit_station)
     fail @error_messages[:not_in_journey] unless in_journey?
     deduct(MIN_BALANCE)
+    @journeys.push({entry: @entry_station, exit: exit_station})
     @entry_station = nil
   end
 
