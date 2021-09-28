@@ -37,13 +37,13 @@ describe Oystercard do
   # end
 
   describe "#touch_in" do
-    it "updates internal boolean in_journey? to true" do
+    it "updates oystercard to be in journey" do
       subject.top_up(described_class::MIN_BALANCE)
       subject.touch_in(kings_cross)
       expect(subject).to be_in_journey
     end
 
-    it "raises error when already in_journey?" do
+    it "raises error when already in journey" do
       message = "You are already in a journey"
 
       subject.top_up(described_class::MIN_BALANCE)
@@ -65,14 +65,14 @@ describe Oystercard do
   end
 
   describe "#touch_out" do
-    it "updates internal boolean in_journey? to false" do
+    it "updates oystercard to not be in journey" do
       subject.top_up(described_class::MIN_BALANCE)
       subject.touch_in(kings_cross)
       subject.touch_out
       expect(subject).not_to be_in_journey
     end
 
-    it "raises error when not in_journey?" do
+    it "raises error when not in journey" do
       message = "You are not in a journey"
 
       expect { subject.touch_out }.to raise_error message
