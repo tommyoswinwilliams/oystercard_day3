@@ -34,6 +34,7 @@ class Oystercard
     fail @error_messages[:not_in_journey] unless in_journey?
     deduct(MIN_BALANCE)
     @in_journey = false
+    @entry_station = nil
   end
 
   def in_journey?
