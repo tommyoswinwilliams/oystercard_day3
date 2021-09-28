@@ -32,7 +32,7 @@ class Oystercard
   def touch_out(exit_station)
     fail @error_messages[:not_in_journey] unless in_journey?
     deduct(MIN_BALANCE)
-    @journeys.push({entry: @entry_station, exit: exit_station})
+    save_journey(exit_station)
     @entry_station = nil
   end
 
@@ -57,5 +57,9 @@ class Oystercard
 
   def fare_exceeds?(fare)
     @balance < fare
+  end
+
+  def save_journey(exit_station)
+    @journeys.push({entry: @entry_station, exit: exit_station})
   end
 end
