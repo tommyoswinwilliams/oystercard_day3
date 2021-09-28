@@ -83,5 +83,12 @@ describe Oystercard do
       subject.touch_in(kings_cross)
       expect { subject.touch_out }.to change { subject.balance }.by(-fare)
     end
+
+    it 'forgets entry station' do
+      subject.top_up(described_class::MIN_BALANCE)
+      subject.touch_in(kings_cross)
+      subject.touch_out
+      expect(subject.entry_station).to eq nil
+    end
   end
 end
