@@ -2,6 +2,14 @@ require "oystercard"
 
 describe Oystercard do
   let(:kings_cross) { double :station, :id => :kings_cross }
+  let!(:victoria) { double :station, :id => :victoria }
+  
+  describe "#initialize" do
+    it "has an empty list of journeys" do
+      expect(subject.journeys).to eq []
+    end
+  end
+
   describe "#balance" do
     it "creates a new card with a balance of 0" do
       expect(subject.balance).to eq 0
@@ -74,7 +82,7 @@ describe Oystercard do
       it "raises error when not in journey" do
         message = "You are not in a journey"
 
-        expect { subject.touch_out }.to raise_error message
+        expect { subject.touch_out(victoria) }.to raise_error message
       end
     end
 
@@ -85,17 +93,17 @@ describe Oystercard do
       end
       
       it "updates oystercard to not be in journey" do
-        subject.touch_out
+        subject.touch_out(victoria)
         expect(subject).not_to be_in_journey
       end
 
       it "deducts fare from balance" do
         fare = described_class::MIN_BALANCE
-        expect { subject.touch_out }.to change { subject.balance }.by(-fare)
+        expect { subject.touch_out(victoria) }.to change { subject.balance }.by(-fare)
       end
 
       it 'forgets entry station' do
-        subject.touch_out
+        subject.touch_out(victoria)
         expect(subject.entry_station).to eq nil
       end
     end
