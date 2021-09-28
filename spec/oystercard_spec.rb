@@ -1,6 +1,7 @@
 require "oystercard"
 
 describe Oystercard do
+  let(:kings_cross) { double :station, :id => :kings_cross }
   describe "#balance" do
     it "creates a new card with a balance of 0" do
       expect(subject.balance).to eq 0
@@ -38,7 +39,7 @@ describe Oystercard do
   describe "#touch_in" do
     it "updates internal boolean in_journey? to true" do
       subject.top_up(described_class::MIN_BALANCE)
-      subject.touch_in
+      subject.touch_in(kings_cross)
       expect(subject).to be_in_journey
     end
 
@@ -46,21 +47,27 @@ describe Oystercard do
       message = "You are already in a journey"
 
       subject.top_up(described_class::MIN_BALANCE)
-      subject.touch_in
+      subject.touch_in(kings_cross)
 
-      expect { subject.touch_in }.to raise_error message
+      expect { subject.touch_in(kings_cross) }.to raise_error message
     end
 
     it "raises error when card with insufficient balance is touched in" do
       message = "Sorry, you don't have the minimum balance required of £#{described_class::MIN_BALANCE}"
-      expect { subject.touch_in }.to raise_error message
+      expect { subject.touch_in(kings_cross) }.to raise_error message
+    end
+
+    it "remembers entry station" do
+      subject.top_up(described_class::MIN_BALANCE)
+      subject.touch_in(kings_cross)
+      expect(subject.entry_station).to eq kings_cross
     end
   end
 
   describe "#touch_out" do
     it "updates internal boolean in_journey? to false" do
       subject.top_up(described_class::MIN_BALANCE)
-      subject.touch_in
+      subject.touch_in(kings_cross)
       subject.touch_out
       expect(subject).not_to be_in_journey
     end
@@ -73,7 +80,7 @@ describe Oystercard do
     it "deducts fare from balance" do
       fare = described_class::MIN_BALANCE
       subject.top_up(fare)
-      subject.touch_in
+      subject.touch_in(kings_cross)
       expect { subject.touch_out }.to change { subject.balance }.by(-fare)
     end
   end
