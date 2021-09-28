@@ -3,7 +3,7 @@ require "oystercard"
 describe Oystercard do
   let(:kings_cross) { double :station, :id => :kings_cross }
   let(:victoria) { double :station, :id => :victoria }
-  let!(:station) { instance_double(Station, :zone => 1, id: :kings_cross)}
+  # let!(:station) { instance_double(Station, :zone => 1, id: :kings_cross)}
 
   describe "#initialize" do
     it "has an empty list of journeys" do
