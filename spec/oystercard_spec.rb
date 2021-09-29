@@ -63,25 +63,15 @@ describe Oystercard do
   end
 
   describe "#touch_out" do
-    context "when errors" do 
-      it "raises error when not in journey" do
-        message = "You are not in a journey"
-
-        expect { subject.touch_out(victoria) }.to raise_error message
-      end
+    it "deducts MAX_PENALTY when not in journey" do
+      expect { subject.touch_out(victoria) }.to change { subject.balance }.by(-described_class::MAX_PENALTY)
     end
 
-    context "when no errors" do
-      before(:each) do
-        subject.top_up(described_class::MIN_BALANCE)
-        subject.touch_in(kings_cross)
-      end
-
-      it "deducts fare from balance" do
-        fare = described_class::MIN_BALANCE
-        expect { subject.touch_out(victoria) }.to change { subject.balance }.by(-fare)
-      end
-
+    it "deducts fare from balance" do
+      subject.top_up(described_class::MIN_BALANCE)
+      subject.touch_in(kings_cross)
+      fare = described_class::MIN_BALANCE
+      expect { subject.touch_out(victoria) }.to change { subject.balance }.by(-fare)
     end
   end
 

@@ -34,8 +34,11 @@ class Oystercard
   end
 
   def touch_out(exit_station)
-    fail @error_messages[:not_in_journey] unless @journey.in_journey?
-    deduct(MIN_BALANCE)
+    fare = MIN_FARE
+    if !@journey.in_journey?
+      fare = MAX_PENALTY
+    end
+    deduct(fare)
     @journey.exit_station(exit_station)
   end
 
