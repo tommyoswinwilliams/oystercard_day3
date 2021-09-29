@@ -32,13 +32,7 @@ describe Oystercard do
       end
     end
   end
-
-  # it "doesn't allow the journey if balance lower than fare" do
-  #   subject.top_up(3)
-  #   message = "Sorry, your balance is not enough to cover the fare"
-  #   expect { subject.deduct(3.50) }.to raise_error message
-  # end
-
+  
   describe "#touch_in" do
     context "when errors" do
       it "raises error when card with insufficient balance is touched in" do
@@ -46,12 +40,16 @@ describe Oystercard do
         expect { subject.touch_in(kings_cross) }.to raise_error message
       end
       
-      it "raises error when already in journey" do
-        message = "You are already in a journey"
-  
+      it "Deduct MAX_PENALTY if already in journey" do  
+        subject.top_up(described_class::MAX_PENALTY*2)
+        subject.touch_in(kings_cross)
+        expect { subject.touch_in(kings_cross) }.to change { subject.balance }.by(-described_class::MAX_PENALTY)
+      end
+
+      it "Deduct MAX_PENALTY if already in journey and throws insufficient money" do  
         subject.top_up(described_class::MIN_BALANCE)
         subject.touch_in(kings_cross)
-  
+        message = "Sorry, you don't have the minimum balance required of £#{described_class::MIN_BALANCE}"
         expect { subject.touch_in(kings_cross) }.to raise_error message
       end
     end
@@ -61,8 +59,6 @@ describe Oystercard do
         subject.top_up(described_class::MIN_BALANCE)
         subject.touch_in(kings_cross)
       end
-      
-
     end
   end
 

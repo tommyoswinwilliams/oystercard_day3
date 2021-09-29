@@ -2,6 +2,8 @@ require 'journey'
 
 class Oystercard
   BALANCE_LIMIT = 90
+  MAX_PENALTY = 6
+  MIN_FARE = 1
   MIN_BALANCE = 1
   attr_reader :balance
   def initialize
@@ -24,7 +26,9 @@ class Oystercard
   end
 
   def touch_in(entry_station)
-    fail @error_messages[:in_journey] if @journey.in_journey?
+    if @journey.in_journey?
+      deduct(MAX_PENALTY)
+    end
     fail @error_messages[:insufficient_min_balance] if fare_exceeds?(MIN_BALANCE)
     @journey.enter_station(entry_station)
   end
@@ -38,7 +42,6 @@ class Oystercard
   private
 
   def deduct(fare)
-    fail @error_messages[:insufficient_fare_balance] if fare_exceeds?(fare)
     @balance -= fare
   end
 
