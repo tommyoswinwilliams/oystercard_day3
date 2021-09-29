@@ -5,12 +5,6 @@ describe Oystercard do
   let(:victoria) { double :station, :id => :victoria }
   # let!(:station) { instance_double(Station, :zone => 1, id: :kings_cross)}
 
-  describe "#initialize" do
-    it "has an empty list of journeys" do
-      expect(subject.journeys).to eq []
-    end
-  end
-
   describe "#balance" do
     it "creates a new card with a balance of 0" do
       expect(subject.balance).to eq 0
@@ -68,13 +62,7 @@ describe Oystercard do
         subject.touch_in(kings_cross)
       end
       
-      it "updates oystercard to be in journey" do
-        expect(subject).to be_in_journey
-      end
 
-      it "remembers entry station" do
-        expect(subject.entry_station).to eq kings_cross
-      end
     end
   end
 
@@ -92,21 +80,12 @@ describe Oystercard do
         subject.top_up(described_class::MIN_BALANCE)
         subject.touch_in(kings_cross)
       end
-      
-      it "updates oystercard to not be in journey" do
-        subject.touch_out(victoria)
-        expect(subject).not_to be_in_journey
-      end
 
       it "deducts fare from balance" do
         fare = described_class::MIN_BALANCE
         expect { subject.touch_out(victoria) }.to change { subject.balance }.by(-fare)
       end
 
-      it 'forgets entry station' do
-        subject.touch_out(victoria)
-        expect(subject.entry_station).to eq nil
-      end
     end
   end
 
@@ -115,14 +94,6 @@ describe Oystercard do
       before(:each) do
         subject.top_up(described_class::MIN_BALANCE)
         subject.touch_in(kings_cross)
-      end
-
-      it "stores journey on touch out" do
-        expect { subject.touch_out(victoria) }.to change { subject.journeys.count }.by(1)
-        
-        last_journey = subject.journeys.last
-        expect(last_journey[:entry]).to eq kings_cross
-        expect(last_journey[:exit]).to eq victoria
       end
     end
   end
