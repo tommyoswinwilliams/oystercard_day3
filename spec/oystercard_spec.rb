@@ -1,8 +1,8 @@
 require "oystercard"
 
 describe Oystercard do
-  let(:kings_cross) { double :station, :id => :kings_cross }
-  let(:victoria) { double :station, :id => :victoria }
+  let(:kings_cross) { double :station, :id => :kings_cross, :zone => 1}
+  let(:victoria) { double :station, :id => :victoria, :zone => 1 }
   # let!(:station) { instance_double(Station, :zone => 1, id: :kings_cross)}
 
   describe "#balance" do
@@ -63,15 +63,24 @@ describe Oystercard do
   end
 
   describe "#touch_out" do
+    let(:heathrow) { double :station, :id => :heathrow, :zone => 6}
+    let(:wimbledon) { double :station, :id => :wimbledon, :zone => 3 }
+
     it "deducts MAX_PENALTY when not in journey" do
       expect { subject.touch_out(victoria) }.to change { subject.balance }.by(-described_class::MAX_PENALTY)
     end
 
-    it "deducts fare from balance" do
+    it "deducts 1 from balance from zone 1 to 1" do
       subject.top_up(described_class::MIN_BALANCE)
       subject.touch_in(kings_cross)
       fare = described_class::MIN_BALANCE
       expect { subject.touch_out(victoria) }.to change { subject.balance }.by(-fare)
+    end
+
+    it "deducts 4 from balance from zone 3 to 6" do
+      subject.top_up(described_class::MIN_BALANCE)
+      subject.touch_in(heathrow)
+      expect { subject.touch_out(wimbledon) }.to change { subject.balance }.by(-4)
     end
   end
 
